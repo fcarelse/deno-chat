@@ -2,6 +2,10 @@ import { Application, Router } from "https://deno.land/x/oak/mod.ts";
 import { oakCors } from 'https://deno.land/x/cors/mod.ts';
 
 const messages = [];
+const channel = new BroadcastChannel("earth");
+channel.onmessage = (event) => {
+  messages.push(event.data);
+};
 
 const router = new Router();
 router
@@ -14,11 +18,12 @@ router
   .post("/messages", async (context) => {
 		const message = await context.request.body().value;
 		messages.push(message);
+		channel.postMessage(message);
     context.response.body = messages;
   })
   .delete("/messages", async (context) => {
 		const res = await context.request.body().value;
-		if(res.index != null && messages[res.index]){
+		if(res.index != null  && messages[res.index]){
 			if(messages.length > 1)
 				for(let i=res.index;i<messages.length-1;i++)
 					messages[i] = messages[i+1];
