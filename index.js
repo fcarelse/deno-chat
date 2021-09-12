@@ -18,7 +18,7 @@ router
   })
   .delete("/messages", async (context) => {
 		const res = await context.request.body().value;
-		if(res.index && messages[res.index]){
+		if(res.index != null && messages[res.index]){
 			if(messages.length > 1)
 				for(let i=res.index;i<messages.length-1;i++)
 					messages[i] = messages[i+1];
