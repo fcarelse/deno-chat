@@ -15,6 +15,12 @@ router
 		const message = await context.request.body().value;
 		messages.push(message);
     context.response.body = messages;
+  })
+  .delete("/messages", async (context) => {
+		const res = await context.request.body().value;
+		if(res.index && messages[res.index])
+			delete messages[res.index];
+    context.response.body = messages;
   });
 
 const app = new Application();
